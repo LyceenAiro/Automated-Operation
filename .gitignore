@@ -1,0 +1,14 @@
+# 构建文件
+__pycache__
+*.pyc
+build
+dist
+*.spec
+upx*
+
+# 调试文件
+/config.cfg
+/*.cfg
+/log
+/*.log
+~*
