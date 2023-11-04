@@ -1,14 +1,18 @@
 from pysnmp.hlapi import *
-from util.cfg_read import cfg
-from util.log import _log
 import paramiko
+
+from util.log import _log
+from util.cfg_read import cfg
+
+import importlib
+language = getattr(importlib.import_module("lang.language", package="lang"), cfg.app_language)
 
 class Mainapp:
     def __init__(self):
-        self.ssh_username = 'pyops'
-        self.ssh_password = 'your_ssh_password'
+        self.ssh_username = cfg.ssh_username
+        self.ssh_password = cfg.ssh_password
         self.devices = [
-            {'ip': 'device1_ip', 'snmp_community': 'device1_snmp_community', 'cpu_utilization_oid': 'device1_cpu_utilization_oid'},
+            {'ip': 'device1_ip', 'snmp_community': 'device1_snmp_community', 'cpu_utilization_oid': 'device1_cpu_utilization_oid'}
         ]
 
     def snmp_log(self):
@@ -51,4 +55,4 @@ class Mainapp:
 if __name__ == "__main__":
     app = Mainapp()
     app.snmp_log()
-    _log._INFO("程序已停止运行")
+    _log._INFO(language.service_stop)

@@ -1,7 +1,10 @@
 from os import path
-from configparser import ConfigParser
 import sys
-from .log import _log
+from configparser import ConfigParser
+
+from util.log import _log
+
+import importlib
 
 
 # Read config.cfg
@@ -11,32 +14,39 @@ class Config:
         self.cfg = ConfigParser()
         if not path.exists('config.cfg'):
             self._create()
-            print('[ERROR]config.cfg not found, the program will try to generate a new one.\n')
+            _log._ERROR('config.cfg not found, the program will try to generate a new one.\n')
             input('Press enter to continue.')
             sys.exit(1)
 
-        self.device_ip, self.snmp_community, self.cpu_utilization_oid, = self._read()
+        self.app_language, self.ssh_username, self.ssh_password = self._read()
         
-        _log._INFO('配置文件读取完毕')
+        language = getattr(importlib.import_module("lang.language", package="lang"), self.app_language)
+        _log._INFO(language.cfg_read_success)
 
 
     def _create(self):
         _cfg = open('config.cfg', 'w', encoding='utf-8')
         _cfg.write(
-            '[path]\n'
-            'device_ip = \n'
-            'snmp_community = \n'
-            'cpu_utilization_oid = \n'
+            '[app]\n'
+            'language = zh_cn\n'
+            '\n'
+            '[ssh]\n'
+            'username = \n'
+            'password = \n'
         )
         _cfg.close()
 
     def _read(self):
         self.cfg.read('config.cfg', encoding='utf-8')
-        device_ip = self.cfg.get('path', 'device_ip')
-        snmp_community = self.cfg.get('path', 'snmp_community')
-        cpu_utilization_oid = self.cfg.get('path', 'cpu_utilization_oid')
+        app_language = self.cfg.get('app', 'language')
+        ssh_username = self.cfg.get('ssh', 'username')
+        ssh_password = self.cfg.get('ssh', 'password')
 
-        return device_ip, snmp_community, cpu_utilization_oid
+        if not len(app_language) == 5 and not '_' in app_language:
+            _log._ERROR('Language setting error.\n')
+            input('Press enter to continue.')
+
+        return app_language, ssh_username, ssh_password
 
 
 cfg = Config()
