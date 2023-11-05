@@ -6,9 +6,9 @@ class init_log:
         if not path.exists("log"):
             makedirs("log")
         if path.exists(f"log/timmer.log"):
-            # 备份上一个日志文件
+            # 将上一个未正常命名的日志文件重命名
             file_list = listdir("log")
-            date = datetime.datetime.now().strftime('%y%m%d')
+            date = datetime.datetime.fromtimestamp(path.getmtime("log/timmer.log")).strftime('%y%m%d')
             prefix = f"timmer{date}"
 
             suffixes = []
@@ -24,7 +24,6 @@ class init_log:
                 new_suffix = str(int(max_suffix) + 1).zfill(len(max_suffix))
             new_filename = prefix + new_suffix + ".log"
             
-            file_timmer = filename[-7:-4]
             rename(f"log/timmer.log", f"log/{new_filename}")
     
     def _RUNNING(self, string):
@@ -49,7 +48,7 @@ class init_log:
         date = datetime.datetime.now().strftime('[%y/%m/%d %H:%M:%S]')
         with open(f"log/timmer.log", "a", encoding="utf-8") as file:
             file.write(f"{date}[WARN]\t{string}\n")
-        print(f"{INFO_Colors}{date}[WARN]\033\t[0m{string}")
+        print(f"{INFO_Colors}{date}[WARN]\033[0m\t{string}")
 
     def _ERROR(self, string):
         # 错误信息
@@ -57,6 +56,12 @@ class init_log:
         date = datetime.datetime.now().strftime('[%y/%m/%d %H:%M:%S]')
         with open(f"log/timmer.log", "a", encoding="utf-8") as file:
             file.write(f"{date}[ERROR]\t{string}\n")
-        print(f"{INFO_Colors}{date}[ERROR]\033\t[0m{string}")
+        print(f"{INFO_Colors}{date}[ERROR]\033[0m\t{string}")
+    
+    def _WRITE(self, string, type):
+        # 静默写入
+        date = datetime.datetime.now().strftime('[%y/%m/%d %H:%M:%S]')
+        with open(f"log/timmer.log", "a", encoding="utf-8") as file:
+            file.write(f"{date}[{type}]\t{string}\n")
 
 _log = init_log()

@@ -7,6 +7,7 @@ dist
 upx*
 
 # 调试文件
+/devices.xlsx
 /config.cfg
 /*.cfg
 /log
