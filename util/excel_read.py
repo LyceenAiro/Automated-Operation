@@ -47,6 +47,7 @@ class Devices:
         sheet.append(['IP', 'SNMP Community', 'CPU Utilization OID'])
         for device in devices:
             sheet.append([device['ip'], device['snmp_community'], device['cpu_utilization_oid']])
+        _log._INFO(f"{language.success_add_device}:\nIP: {device['ip']}, Community: {device['snmp_community']}, OID: {device['cpu_utilization_oid']}")
 
         workbook.save('devices.xlsx')
 

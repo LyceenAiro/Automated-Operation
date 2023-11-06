@@ -15,9 +15,11 @@ class en_us:
     # util.excel_read.py
     read_devices_head = "Network device info："
     not_find_devices = "Device configuration not found, please manually add configuration."
+    success_add_device = ""
 
     # main.py
     not_exec = "Command error, you can use 'help' to query the command."
+    ip_not_connect = ""
 
 
 class zh_cn:
@@ -36,6 +38,8 @@ class zh_cn:
     # util.excel_read.py
     read_devices_head = "设备表信息："
     not_find_devices = "没有找到设备配置，清手动添加配置"
+    success_add_device = "成功添加配置"
 
     # main.py
     not_exec = "命令错误，可以使用help来查询命令"
+    ip_not_connect = "无法直接通过IP进行连接，尝试使用ssh进行连接"
