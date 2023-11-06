@@ -1,7 +1,6 @@
 from pysnmp.hlapi import *
 import paramiko
-import socket
-
+import subprocess
 
 from util.log import _log
 from util.cfg_read import cfg
@@ -25,9 +24,8 @@ class Mainapp:
                 _log._RUNNING("snmp_log", f"IP: {device_ip}, SNMP Community: {snmp_community}, CPU Utilization OID: {cpu_utilization_oid}")
                 
                 # 检查IP是否可达
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                result = sock.connect_ex((device_ip, 22))
-                if result == 0:
+                result = check_ip_reachability(device_ip)
+                if result:
                     # IP可达，直接查询设备
                     self.query_device(device_ip, snmp_community, cpu_utilization_oid)
                 else:
@@ -50,6 +48,18 @@ class Mainapp:
             
             # 执行SNMP查询命令
             # ...
+            error_indication, error_status, error_index, var_binds = next(snmp_request)
+            if error_indication:
+                # 处理错误
+                _log._ERROR(f"SNMP查询错误：{error_indication}")
+            else:
+                if error_status:
+                    # 处理错误状态
+                    _log._ERROR(f"SNMP错误状态：{error_status.prettyPrint()}")
+                else:
+                    # 处理返回的变量绑定
+                    for var_bind in var_binds:
+                        _log._INFO(f"OID: {var_bind[0]}, Value: {var_bind[1]}")
             
         except Exception as error:
             _log._ERROR(str(error))
@@ -75,6 +85,17 @@ class Mainapp:
             
         except Exception as error:
             _log._ERROR(str(error))
+
+
+def check_ip_reachability(ip):
+    try:
+        result = subprocess.call(['ping', '-c', '1', ip])
+        if result == 0:
+            return True
+        else:
+            return False
+    except subprocess.CalledProcessError:
+        return False
             
         
 def service_while():

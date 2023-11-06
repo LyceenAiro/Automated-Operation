@@ -60,6 +60,8 @@ class init_log:
     
     def _WRITE(self, string, type):
         # 静默写入
+        if "&" == string[0]:
+            return
         date = datetime.datetime.now().strftime('[%y/%m/%d %H:%M:%S]')
         with open(f"log/timmer.log", "a", encoding="utf-8") as file:
             file.write(f"{date}[{type}]\t{string}\n")
