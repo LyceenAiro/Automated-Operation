@@ -20,6 +20,8 @@ class en_us:
     # main.py
     not_exec = "Command error, you can use 'help' to query the command."
     ip_not_connect = "Unable to connect directly through IP, attempting to connect using SSH."
+    try_ip_connect = "Connect the device now..."
+    select_now = "Querying now..."
 
 
 class zh_cn:
@@ -43,3 +45,5 @@ class zh_cn:
     # main.py
     not_exec = "命令错误，可以使用help来查询命令"
     ip_not_connect = "无法直接通过IP进行连接，尝试使用SSH进行连接"
+    try_ip_connect = "正在连接设备"
+    select_now = "正在查询"

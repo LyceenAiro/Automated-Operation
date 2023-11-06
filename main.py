@@ -1,7 +1,6 @@
 from pysnmp.hlapi import *
 import paramiko
-import subprocess
-
+from ping3 import ping
 from util.log import _log
 from util.cfg_read import cfg
 from util.excel_read import devices
@@ -38,6 +37,7 @@ class Mainapp:
     
     def query_device(self, device_ip, snmp_community, cpu_utilization_oid):
         try:
+            _log._INFO(language.select_now)
             # 构建SNMP命令
             snmp_object = ObjectIdentity(cpu_utilization_oid)
             snmp_varbind = ObjectType(snmp_object)
@@ -47,7 +47,6 @@ class Mainapp:
                                 ContextData(), snmp_varbind)
             
             # 执行SNMP查询命令
-            # ...
             error_indication, error_status, error_index, var_binds = next(snmp_request)
             if error_indication:
                 # 处理错误
@@ -71,7 +70,7 @@ class Mainapp:
             ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             
             # 连接SSH服务器
-            ssh_client.connect(device_ip, username=self.ssh_username, password=self.ssh_password)
+            ssh_client.connect(device_ip, username=self.ssh_username, password=self.ssh_password, timeout=3)
             
             # 使用SSH执行SNMP查询命令
             stdin, stdout, stderr = ssh_client.exec_command('snmpwalk -v 2c -c {} {} {}'.format(snmp_community, device_ip, cpu_utilization_oid))
@@ -89,12 +88,13 @@ class Mainapp:
 
 def check_ip_reachability(ip):
     try:
-        result = subprocess.call(['ping', '-c', '1', ip])
-        if result == 0:
+        _log._INFO(language.try_ip_connect)
+        response_time = ping(ip, timeout=0.5)
+        if response_time is not None:
             return True
         else:
             return False
-    except subprocess.CalledProcessError:
+    except Exception:
         return False
             
         
