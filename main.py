@@ -18,10 +18,11 @@ class Mainapp:
 
     def snmp_log(self):
         try:
-            for device in devices:
+            for device in devices.devices:
                 device_ip = device['ip']
                 snmp_community = device['snmp_community']
                 cpu_utilization_oid = device['cpu_utilization_oid']
+                _log._RUNNING("snmp_log", f"IP: {device_ip}, SNMP Community: {snmp_community}, CPU Utilization OID: {cpu_utilization_oid}")
                 
                 # 检查IP是否可达
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

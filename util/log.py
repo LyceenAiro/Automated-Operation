@@ -26,13 +26,13 @@ class init_log:
             
             rename(f"log/timmer.log", f"log/{new_filename}")
     
-    def _RUNNING(self, string):
+    def _RUNNING(self, app, string):
         # 操作信息
         INFO_Colors = "\033[1;32m"
         date = datetime.datetime.now().strftime('[%y/%m/%d %H:%M:%S]')
         with open(f"log/timmer.log", "a", encoding="utf-8") as file:
-            file.write(f"{date}[RUNNING]\t{string}\n")
-        print(f"{INFO_Colors}{date}[RUNNING]\033\t[0m{string}")
+            file.write(f"{date}[{app}]\t{string}\n")
+        print(f"{INFO_Colors}{date}[{app}]\033\t[0m{string}")
     
     def _INFO(self, string):
         # 日志信息

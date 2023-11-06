@@ -12,13 +12,13 @@ class Devices:
         # 从Excel表格中读取配置
         if path.exists('devices.xlsx'):
             # 从Excel表格中读取配置
-            devices = self.read()
-            log_message = f"\n{language.read_devices_head}"
-            for device in devices:
+            self.devices = self.read()
+            log_message = f"{language.read_devices_head}"
+            for device in self.devices:
                 log_message += f"\nIP: {device['ip']}, SNMP Community: {device['snmp_community']}, CPU Utilization OID: {device['cpu_utilization_oid']}"
             _log._INFO(log_message)
         else:
-            devices = []
+            self.devices = []
             _log._INFO(language.not_find_devices)
 
     
