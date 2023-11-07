@@ -1,4 +1,4 @@
-from os import path, listdir, rename
+from os import path, listdir, rename, remove
 import datetime
 
 from util.cfg_read import cfg
@@ -39,5 +39,18 @@ class AppTool:
             new_filename = prefix + new_suffix + ".log"
             
             rename(f"log/timmer.log", f"log/{new_filename}")
+    
+    def clear_log(self):
+        # 清理log文件
+        about = input(language.clear_log_about)
+        if about == "y" or "Y" or "Yes":
+            clear_num = 0
+            for file_name in listdir("log"):
+                file_path = path.join("log", file_name)
+                if path.isfile(file_path) and file_name != "timmer.log":
+                    remove(file_path)
+                    clear_num +=1
+            _log._INFO(f"{language.clear_log_num[0]}{clear_num}{language.clear_log_num[1]}")
+
 
 tool = AppTool()
