@@ -1,3 +1,3 @@
 class install_data:
     softname = "PyNetOps"
-    version = "0.0.3"
+    version = "0.0.4"

@@ -40,23 +40,40 @@ class Mainapp:
         try:
             _log._INFO(language.select_now)
             
-            error_indication, error_status, error_index, var_binds = next(
-            getCmd(SnmpEngine(),
-                   CommunityData(read_community),
-                   UdpTransportTarget((device_ip, 161)),
-                   ContextData(),
-                   ObjectType(ObjectIdentity(cpu_utilization_oid)))
-            )
+            oid = cpu_utilization_oid
+            down_num = 0 
             
-            if error_indication:
-                _log._ERROR(f"{language.SNMP_select_error}: {error_indication}")
-            else:
-                if error_status:
-                    _log._ERROR(f"{language.SNMP_error_info}: {error_status.prettyPrint()}")
+            while True:
+
+                error_indication, error_status, error_index, var_binds = next(
+                    getCmd(SnmpEngine(),
+                        CommunityData(read_community),
+                        UdpTransportTarget((device_ip, 161)),
+                        ContextData(),
+                        ObjectType(ObjectIdentity(oid))
+                    )
+                )
+                
+                if error_indication:
+                    _log._ERROR(f"{language.SNMP_select_error}: {error_indication}")
+                    break
                 else:
-                    # return info
-                    for var_bind in var_binds:
-                        _log._INFO({var_bind[1]})
+                    if error_status:
+                        _log._ERROR(f"{language.SNMP_error_info}: {error_status.prettyPrint()}")
+                        break
+                    else:
+                        for var_bind in var_binds:
+                            out_var = var_bind[1]
+                            
+                        if out_var:
+                            _log._RUNNING(oid, var_bind[1])
+                        # 设置空白超时项
+                        elif down_num < 2:
+                            down_num += 1
+                        else:
+                            break
+                    
+                oid = oid.rsplit('.', 1)[0] + '.' + str(int(oid.rsplit('.', 1)[1]) + 1)
             
         except Exception as error:
             _log._ERROR(str(error))

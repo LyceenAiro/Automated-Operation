@@ -1,5 +1,5 @@
 # python 3.11
-pysnmp
+pysnmplib
 paramiko
 openpyxl
 ping3
