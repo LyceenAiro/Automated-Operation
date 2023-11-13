@@ -4,8 +4,8 @@ import openpyxl
 from util.log import _log
 from util.cfg_read import cfg
 
-import importlib
-language = getattr(importlib.import_module("lang.language", package="lang"), cfg.app_language)
+from importlib import import_module
+language = getattr(import_module("lang.language", package="lang"), cfg.app_language)
 
 class Devices:
     def __init__(self):

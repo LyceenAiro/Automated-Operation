@@ -4,7 +4,7 @@ from configparser import ConfigParser
 
 from util.log import _log
 
-import importlib
+from importlib import import_module
 
 
 # Read config.cfg
@@ -20,7 +20,7 @@ class Config:
 
         self.app_language, self.ssh_username, self.ssh_password = self._read()
         
-        language = getattr(importlib.import_module("lang.language", package="lang"), self.app_language)
+        language = getattr(import_module("lang.language", package="lang"), self.app_language)
         _log._INFO(language.cfg_read_success)
 
 

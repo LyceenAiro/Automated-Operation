@@ -3,3 +3,5 @@ pysnmplib
 paramiko
 openpyxl
 ping3
+setuptools==40.8.0
+netmiko

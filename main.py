@@ -1,5 +1,5 @@
 from pysnmp.hlapi import *
-import paramiko
+import netmiko
 from ping3 import ping
 from util.log import _log
 from util.cfg_read import cfg
@@ -7,8 +7,8 @@ from util.excel_read import devices
 from util.tools import tool
 from util.list import list_oid
 
-import importlib
-language = getattr(importlib.import_module("lang.language", package="lang"), cfg.app_language)
+from importlib import import_module
+language = getattr(import_module("lang.language", package="lang"), cfg.app_language)
 
 class Mainapp:
     def __init__(self):
@@ -81,8 +81,8 @@ class Mainapp:
     def ssh_query_device(self, device_ip, read_community, cpu_utilization_oid):
         try:
             # 创建SSH连接
-            ssh_client = paramiko.SSHClient()
-            ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            ssh_client = netmiko.SSHClient()
+            ssh_client.set_missing_host_key_policy(netmiko.AutoAddPolicy())
             ssh_client.connect(device_ip, username=self.ssh_username, password=self.ssh_password, timeout=3)
             
             # 执行SNMP查询命令
@@ -111,6 +111,7 @@ def check_ip_reachability(ip):
             
         
 def service_while():
+    # 前端交互界面
     while True:
         cmd = tool.terminal().lower()
         if cmd == "":

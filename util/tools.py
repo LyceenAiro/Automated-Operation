@@ -4,8 +4,8 @@ import datetime
 from util.cfg_read import cfg
 from util.log import _log
 
-import importlib
-language = getattr(importlib.import_module("lang.language", package="lang"), cfg.app_language)
+from importlib import import_module
+language = getattr(import_module("lang.language", package="lang"), cfg.app_language)
 
 class AppTool:
     def terminal(self):
@@ -42,15 +42,15 @@ class AppTool:
     
     def clear_log(self):
         # 清理log文件
-        about = input(language.clear_log_about)
-        if about == "y" or "Y" or "Yes":
+        about = input(language.clear_log_about).lower()
+        if about == "y" or about == "yes":
             clear_num = 0
             for file_name in listdir("log"):
                 file_path = path.join("log", file_name)
                 if path.isfile(file_path) and file_name != "timmer.log":
                     remove(file_path)
                     clear_num +=1
-            _log._INFO(f"{language.clear_log_num[0]}{clear_num}{language.clear_log_num[1]}")
+            _log._INFO(f"{language.clear_log_num[0]} {clear_num} {language.clear_log_num[1]}")
 
 
 tool = AppTool()
