@@ -7,6 +7,7 @@ dist
 upx*
 
 # 调试文件
+/script
 /test.py
 /devices.xlsx
 /config.cfg

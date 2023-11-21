@@ -3,7 +3,9 @@ class en_us:
     # Enghish
     # util.tools.py
     tools_help = """
-    add { IP } { Community } { OID }\tAdd device configuration.\n
+    net \tfind netmiko script
+    net { script } { ip } { setting }\tuse netmiko script\n
+    add { IP } { Read Community } { Write Community }\tAdd device configuration.\n
     snmp { cmd } { ip }\tRetrieve device log information via SNMP.\n
         cmd ---
             | add\tAdd device to device table
@@ -40,19 +42,22 @@ class en_us:
 
     # main.py
     not_exec = "Command error, you can use 'help' to query the command."
-    ip_not_connect = "Unable to connect directly through IP, attempting to connect using SSH."
+    ip_not_connect = "Unable to connect directly through IP, you should connect use SSH."
     try_ip_connect = "Connect the device now..."
     select_now = "Querying now..."
     SNMP_select_error = "SNMP select error"
     SNMP_sekect_info = "SNMP error info"
     reload_device = "Reloading device table..."
+    not_find_script = "not find this script"
 
 
 class zh_cn:
     # 简体中文
     # util.tools.py
     tools_help = """
-    add { IP } { Community } { OID }\t添加设备配置
+    net\t查询netmiko脚本
+    net { script } { ip } { setting }\t使用netmiko脚本\n
+    add { IP } { Read Community } { Write Community }\t添加设备配置
     snmp { cmd } { ip }\t通过snmp获取设备log信息
         cmd ---
             | add\t添加设备到设备表中
@@ -89,9 +94,10 @@ class zh_cn:
 
     # main.py
     not_exec = "命令错误，可以使用help来查询命令"
-    ip_not_connect = "无法直接通过IP进行连接，尝试使用SSH进行连接"
+    ip_not_connect = "无法直接通过IP进行连接，请尝试使用SSH重新连接"
     try_ip_connect = "正在连接设备"
     select_now = "正在查询"
     SNMP_select_error = "SNMP查询错误"
     SNMP_sekect_info = "SNMP错误状态"
     reload_device = "正在重新载入设备表"
+    not_find_script = "没有找到这个脚本"

@@ -14,7 +14,7 @@ class Devices:
         else:
             workbook = openpyxl.Workbook()
             sheet = workbook.active
-            sheet.append(['IP', 'Read Community', 'Write Community'])
+            sheet.append(['IP', 'Read Community', 'Write Community', "SSH User", "SSH Password", "Secret"])
             workbook.save('devices.xlsx')
 
             self.devices = []
@@ -31,7 +31,10 @@ class Devices:
             device = {
                 'ip': row[0],
                 'read_community': row[1],
-                'write_community': row[2]
+                'write_community': row[2],
+                'ssh_name' : row[3],
+                'ssh_password' : row[4],
+                'secret' : row[5]
             }
             # 注释方法
             if row[0][0] == "#":

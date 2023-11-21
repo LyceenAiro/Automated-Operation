@@ -6,16 +6,50 @@ from util.cfg_read import cfg
 from util.excel_read import devices
 from util.tools import tool
 from util.list import list_oid
+from os import path, makedirs, listdir
 
 from importlib import import_module
 language = getattr(import_module("lang.language", package="lang"), cfg.app_language)
 
 class Mainapp:
     def __init__(self):
-        self.ssh_username = cfg.ssh_username
-        self.ssh_password = cfg.ssh_password
+        if not path.exists("script"):
+            makedirs("script")
+    
+    ##
+    ## NETMIKO SELECT
+    ##
+
+    def netmiko_script(self, cmd):
+        try:
+            module = import_module(f'script.{cmd.split()[1]}')
+            for device in devices.devices:
+                if not device['ip'] == cmd.split()[2]:
+                    continue
+                ssh_setting = {
+                    'device_type': 'huawei',
+                    'ip': device['ip'],
+                    'username': device['ssh_name'],
+                    'password': device['ssh_password'],
+                    'secret': device['secret'],
+                    }
+                break
+            
+        except:
+            _log._ERROR(language.not_find_script)
+        try:
+            module.main(ssh_setting, cmd)
+        except TypeError:
+            _log._ERROR("参数输入错误")
+        except Exception as error:
+            _log._ERROR(error)
+
+    ##
+    ## PYSNMP SELECT
+    ##
 
     def snmp_all(self, cpu_utilization_oid):
+        # 查询所有设备
         try:
             for device in devices.devices:
                 device_ip = device['ip']
@@ -26,17 +60,18 @@ class Mainapp:
             _log._ERROR(str(error))
     
     def snmp_select(self, ip, read_community, cpu_utilization_oid):
+        # 使用snmp时查询是否可以直接通过ip连接设备
         _log._RUNNING(cpu_utilization_oid, f"IP: {ip}, Read Community: {read_community}")
         
         result = check_ip_reachability(ip)
         if result:
             self.query_device(ip, read_community, cpu_utilization_oid)
         else:
-            # IP不可达，尝试使用SSH连接查询设备
+            # IP不可达，提示用户使用ssh查询
             _log._WARN(language.ip_not_connect)
-            self.ssh_query_device(ip, read_community, cpu_utilization_oid)
     
     def query_device(self, device_ip, read_community, cpu_utilization_oid):
+        # 查询流程
         try:
             _log._INFO(language.select_now)
             
@@ -78,27 +113,10 @@ class Mainapp:
         except Exception as error:
             _log._ERROR(str(error))
     
-    def ssh_query_device(self, device_ip, read_community, cpu_utilization_oid):
-        try:
-            # 创建SSH连接
-            ssh_client = netmiko.SSHClient()
-            ssh_client.set_missing_host_key_policy(netmiko.AutoAddPolicy())
-            ssh_client.connect(device_ip, username=self.ssh_username, password=self.ssh_password, timeout=3)
-            
-            # 执行SNMP查询命令
-            stdin, stdout, stderr = ssh_client.exec_command('snmpwalk -v 2c -c {} {} {}'.format(read_community, device_ip, cpu_utilization_oid))
-            
-            # return info
-            for line in stdout:
-                _log._INFO(line.strip())
-            
-            ssh_client.close()
-            
-        except Exception as error:
-            _log._ERROR(str(error))
 
 
 def check_ip_reachability(ip):
+    # 查询ip是否可达
     try:
         _log._INFO(language.try_ip_connect)
         response_time = ping(ip, timeout=0.5)
@@ -118,6 +136,19 @@ def service_while():
             continue
         elif cmd == "help":
             tool.help()
+        elif cmd.split()[0] == "net":
+            if len(cmd.split()) > 2:
+                app.netmiko_script(cmd)
+            elif len(cmd.split()) == 2:
+                module = import_module(f'script.{cmd.split()[1]}')
+                module.help_note()
+            elif len(cmd.split()) == 1:
+                for filename in listdir("script"):
+                    try:
+                        if filename.split(".")[1] == "py":
+                            print(filename.split(".")[0])
+                    except:
+                        pass
         elif cmd.split()[0] == "snmp" and len(cmd.split()) > 1:
             try:
                 if cmd.split()[1] == "add":

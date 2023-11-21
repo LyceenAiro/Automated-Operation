@@ -1,6 +1,5 @@
 # python 3.11
 pysnmplib
-paramiko
 openpyxl
 ping3
 setuptools==40.8.0
