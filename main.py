@@ -7,6 +7,7 @@ from util.excel_read import devices
 from util.tools import tool
 from util.list import list_oid
 from os import path, makedirs, listdir
+from netmiko import ConnectHandler
 
 from importlib import import_module
 language = getattr(import_module("lang.language", package="lang"), cfg.app_language)
@@ -34,10 +35,22 @@ class Mainapp:
                     'secret': device['secret'],
                     }
                 break
-            
         except:
             _log._ERROR(language.not_find_script)
-        module.main(ssh_setting, cmd)
+        connection = ConnectHandler(**ssh_setting)
+        try:
+            module.main(connection, cmd)
+        except KeyboardInterrupt:
+            _log._INFO("已经退出了监视脚本")
+        except TypeError:
+            _log._ERROR("参数输入错误")
+        except Exception as error:
+            _log._ERROR(error)
+        try:
+            connection.disconnect()
+        except Exception:
+            pass
+
 
     ##
     ## PYSNMP SELECT
