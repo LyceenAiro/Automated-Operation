@@ -22,7 +22,7 @@ def main(connection, cmd):
     threshold = int(cmd.split()[4])
     interface = cmd.split()[3]
 
-    _log._INFO("开始端口监视脚本，使用Ctrl+C退出")
+    _log._RUNNING(cmd.split()[2], "开始端口监视脚本，使用Ctrl+C退出")
 
     # 检测这个端口是否是开启状态
     output = connection.send_command(f'display interface {interface}')
@@ -52,7 +52,7 @@ def main(connection, cmd):
         if progress > 10:
             progress = 10
         progress_bar = '■' * progress + ' ' * (10 - progress) + progress_str
-        _log._INFO(f"{progress_bar}\tinput {round(input_rate, 2)} bps | output {round(output_rate, 2)} bps")
+        _log._RUNNING(interface, f"{progress_bar}\tinput {round(input_rate, 2)} bps | output {round(output_rate, 2)} bps")
 
         # 检测流量是否异常
         if input_rate > threshold or output_rate > threshold:

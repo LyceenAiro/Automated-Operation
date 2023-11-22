@@ -35,10 +35,10 @@ class Mainapp:
                     'secret': device['secret'],
                     }
                 break
-        except:
+        except ModuleNotFoundError:
             _log._ERROR(language.not_find_script)
-        connection = ConnectHandler(**ssh_setting)
         try:
+            connection = ConnectHandler(**ssh_setting)
             module.main(connection, cmd)
         except KeyboardInterrupt:
             _log._INFO("已经退出了监视脚本")
