@@ -37,12 +37,7 @@ class Mainapp:
             
         except:
             _log._ERROR(language.not_find_script)
-        try:
-            module.main(ssh_setting, cmd)
-        except TypeError:
-            _log._ERROR("参数输入错误")
-        except Exception as error:
-            _log._ERROR(error)
+        module.main(ssh_setting, cmd)
 
     ##
     ## PYSNMP SELECT

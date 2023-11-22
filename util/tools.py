@@ -10,7 +10,11 @@ language = getattr(import_module("lang.language", package="lang"), cfg.app_langu
 class AppTool:
     def terminal(self):
         date = datetime.datetime.now().strftime('[%y/%m/%d %H:%M:%S]')
-        cmd = input(f"\033[1;36m{date}Terminal>\033[0m")
+        try:
+            cmd = input(f"\033[1;36m{date}Terminal>\033[0m")
+        except KeyboardInterrupt or EOFError:
+            print("Ctrl + C")
+            self.shutdown()
         _log._WRITE(cmd, "input")
         return cmd
     
@@ -39,6 +43,7 @@ class AppTool:
             new_filename = prefix + new_suffix + ".log"
             
             rename(f"log/timmer.log", f"log/{new_filename}")
+        exit()
     
     def clear_log(self):
         # 清理log文件
