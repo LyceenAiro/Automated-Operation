@@ -1,11 +1,21 @@
 # Script Name   port_m
-# Version       1.0.0
+# Version       1.0.1
 # Author        LyceenAiro
-# Dependent     0.0.5 
+# Dependent     0.0.6
 #
 # 这是一个脚本实例
 # 它将持续监控端口并在端口异常时关闭端口
+#
+# API
+# help_note(): 在net + {该脚本名}时会自动启动该函数，建议在此处标记帮助文本
+# main(connection, cmd)
+#       connection: 传入该机器的ssh连接
+#       cmd: 传入输入的命令列表
+#           cmd.split()[0] 默认是net字符，无实际作用
+#           cmd.split()[1] 默认是函数名
+#           cmd.split()[2] 默认是机器IP地址
 
+# 在这里可以调用util中的函数
 from util.log import _log
 from util.cfg_read import cfg
 import time, math
@@ -31,6 +41,8 @@ def main(connection, cmd):
         if open_bool in ("y", "Y", "yes", "YES"):
             command = (f'interface {interface}', 'undo shutdown')
             connection.send_config_set(command)
+        else:
+            return
 
     while True:
         # 发送命令获取接口的流量信息
