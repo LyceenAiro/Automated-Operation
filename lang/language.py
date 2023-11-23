@@ -4,13 +4,14 @@ class en_us:
     # util.tools.py
     tools_help = """
     net \tfind netmiko script
+    net { script }\tselect script help note
     net { script } { ip } { setting }\tuse netmiko script\n
-    add { IP } { Read Community } { Write Community }\tAdd device configuration.\n
-    snmp { cmd } { ip }\tRetrieve device log information via SNMP.\n
+    add { IP } { Read Community } { Write Community }\tAdd device configuration
+    reload\tReload device table\n
+    snmp { cmd } { ip }\tRetrieve device log information via SNMP\n
         cmd ---
             | add\tAdd device to device table
             | delete\tDelete device in device table
-            | reload\tReload device table
             | sysdesc\tQuery system information
             | systime\tQuery system time
             | sysname\tQuery system name
@@ -49,20 +50,23 @@ class en_us:
     SNMP_sekect_info = "SNMP error info"
     reload_device = "Reloading device table..."
     not_find_script = "not find this script"
+    exit_script = "script was stop"
+    type_error = "error type set"
 
 
 class zh_cn:
     # 简体中文
     # util.tools.py
     tools_help = """
-    net\t查询netmiko脚本
+    net\t查询所有netmiko脚本名称
+    net { script }\t查询脚本的帮助信息
     net { script } { ip } { setting }\t使用netmiko脚本\n
     add { IP } { Read Community } { Write Community }\t添加设备配置
+    reload\t重载设备表\n
     snmp { cmd } { ip }\t通过snmp获取设备log信息
         cmd ---
             | add\t添加设备到设备表中
             | delete\t从设备表中删除设备
-            | reload\t重载设备表
             | sysdesc\t查询系统信息
             | systime\t查询系统时间
             | sysname\t查询系统名
@@ -101,3 +105,5 @@ class zh_cn:
     SNMP_sekect_info = "SNMP错误状态"
     reload_device = "正在重新载入设备表"
     not_find_script = "没有找到这个脚本"
+    exit_script = "脚本运行结束"
+    type_error = "参数输入错误"

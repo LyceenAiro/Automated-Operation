@@ -41,9 +41,9 @@ class Mainapp:
             connection = ConnectHandler(**ssh_setting)
             module.main(connection, cmd)
         except KeyboardInterrupt:
-            _log._INFO("已经退出了监视脚本")
+            _log._INFO(language.exit_script)
         except TypeError:
-            _log._ERROR("参数输入错误")
+            _log._ERROR(language.type_error)
         except Exception as error:
             _log._ERROR(error)
         try:
@@ -140,10 +140,15 @@ def service_while():
     # 前端交互界面
     while True:
         cmd = tool.terminal().lower()
-        if cmd == "":
+        try:
+            cmd.split()[0]
+        except IndexError:
             continue
-        elif cmd == "help":
+        if cmd == "help":
             tool.help()
+        elif cmd == "reload":
+            _log._RUNNING("reload", language.reload_device)
+            devices.read()
         elif cmd.split()[0] == "net":
             if len(cmd.split()) > 2:
                 app.netmiko_script(cmd)
@@ -171,9 +176,6 @@ def service_while():
                             _log._ERROR(str(error))
                 elif cmd.split()[1] == "delete":
                     devices.delete(cmd.split()[2])
-                elif cmd.split()[1] == "reload":
-                    _log._RUNNING("reload", language.reload_device)
-                    devices.read()
                 elif cmd.split()[2] == "all":
                     app.snmp_all(list_oid[cmd.split()[1]])
                 else:
