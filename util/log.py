@@ -8,8 +8,8 @@ class init_log:
         if path.exists(f"log/timmer.log"):
             # 将上一个未正常命名的日志文件重命名
             file_list = listdir("log")
-            date = datetime.datetime.fromtimestamp(path.getmtime("log/timmer.log")).strftime('%y%m%d')
-            prefix = f"timmer{date}"
+            date = datetime.datetime.fromtimestamp(path.getmtime("log/timmer.log")).strftime('%y_%m_%d_')
+            prefix = f"timmer_{date}"
 
             suffixes = []
             for filename in file_list:
