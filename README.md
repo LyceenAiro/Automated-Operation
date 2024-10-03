@@ -7,7 +7,6 @@
 - netmiko script API
   
 ## Future
-- Bug fix
-- New script API
-- Complate snmp select
-- More future
+- 目前该项目的分支正在运行坏境中稳定开发中
+- 涉及的部分脚本内容暂时无法开源
+- 当时机合适时将会同步核心API
