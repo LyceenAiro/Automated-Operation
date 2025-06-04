@@ -1,6 +1,13 @@
-# python 3.11
+# python 3.13
 pysnmplib
-openpyxl
-ping3
-setuptools==40.8.0
-netmiko
+openpyxl==3.1.5
+ping3==4.0.8
+paramiko==3.5.0
+mysql-connector-python==9.1.0
+pyreadline==2.1
+psutil==6.1.0
+pandas==2.2.3
+xlrd==2.0.1
+rich==13.9.4
+tqdm==4.67.0
+ntplib==0.4.0
